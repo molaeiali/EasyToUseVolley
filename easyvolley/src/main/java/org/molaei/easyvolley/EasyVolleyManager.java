@@ -41,7 +41,7 @@ public abstract class EasyVolleyManager {
     protected abstract EasyVolleyLoading getLoading(Context context);
 
     public void GET(final String tag, final Context context, String url, final EasyVolleyWorks easyVolleyWorks, final boolean hasLoading) {
-        GET(tag, context, url, easyVolleyWorks, hasLoading, defaultHeaders());
+        GET(tag, context, url, easyVolleyWorks, hasLoading, null);
     }
 
     @SuppressWarnings("WeakerAccess")
@@ -69,7 +69,14 @@ public abstract class EasyVolleyManager {
         }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                return headers == null ? new HashMap<String, String>() : headers;
+                HashMap<String,String> defaultHeaders = new HashMap<>();
+                if(headers != null){
+                    defaultHeaders.putAll(headers);
+                }
+                if(defaultHeaders() != null){
+                    defaultHeaders.putAll(defaultHeaders());
+                }
+                return defaultHeaders;
             }
         };
         Log.i("EasyVolleyPreExecGET", tag);
@@ -81,7 +88,7 @@ public abstract class EasyVolleyManager {
     }
 
     public void POST(final String tag, final Context context, String url, final HashMap<String, String> parameters, final EasyVolleyWorks easyVolleyWorks, final boolean hasLoading) {
-        POST(tag, context, url, parameters, easyVolleyWorks, hasLoading, defaultHeaders());
+        POST(tag, context, url, parameters, easyVolleyWorks, hasLoading, null);
     }
 
     @SuppressWarnings("WeakerAccess")
@@ -118,7 +125,14 @@ public abstract class EasyVolleyManager {
 
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                return headers == null ? new HashMap<String, String>() : headers;
+                HashMap<String,String> defaultHeaders = new HashMap<>();
+                if(headers != null){
+                    defaultHeaders.putAll(headers);
+                }
+                if(defaultHeaders() != null){
+                    defaultHeaders.putAll(defaultHeaders());
+                }
+                return defaultHeaders;
             }
         };
         Log.i("EasyVolleyPreExecPOST", tag);
@@ -131,7 +145,7 @@ public abstract class EasyVolleyManager {
 
 
     public void MultiPart(final String tag, final Context context, String url, final HashMap<String, String> parameters, final HashMap<String, File> files, final EasyVolleyWorks easyVolleyWorks, final boolean hasLoading) {
-        MultiPart(tag, context, url, parameters, files, easyVolleyWorks, hasLoading, defaultHeaders());
+        MultiPart(tag, context, url, parameters, files, easyVolleyWorks, hasLoading, null);
     }
 
     @SuppressWarnings("WeakerAccess")
@@ -192,7 +206,14 @@ public abstract class EasyVolleyManager {
             }) {
                 @Override
                 public Map<String, String> getHeaders() throws AuthFailureError {
-                    return headers == null ? super.getHeaders() : headers;
+                    HashMap<String,String> defaultHeaders = new HashMap<>();
+                    if(headers != null){
+                        defaultHeaders.putAll(headers);
+                    }
+                    if(defaultHeaders() != null){
+                        defaultHeaders.putAll(defaultHeaders());
+                    }
+                    return defaultHeaders;
                 }
             };
             Log.i("EasyVolleyPreExecMULTI", tag);
