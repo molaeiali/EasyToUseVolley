@@ -25,7 +25,8 @@ Step 2. Add the dependency
 	        compile 'com.github.molaeiali:easytousevolley:1.0.0-beta2'
 	}
 
-You need to create a singleton class named **EasyVolley** that extends **EasyVolleyManager**,  it has to Override **defaultHeaders** ,if you have a default header that should used on all connections, create it here and if not, return null.
+You need to create a singleton class named **EasyVolley** that extends **EasyVolleyManager**.
+It has to Override **defaultHeaders** ,if you have a default header that should used on all connections, create it here and if not, return null.
 
 It has to Override **getLoading** too, if you have a loading view for connections, it should implement **EasyVolleyLoading** that has two functions, **start** and **stop**, and you should return a new instance of it on getLoading, and if you don't have any loading view, return null.
 
