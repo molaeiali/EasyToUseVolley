@@ -1,4 +1,6 @@
 # EasyToUseVolley
+[![](https://jitpack.io/v/molaeiali/easytousevolley.svg)](https://jitpack.io/#molaeiali/easytousevolley)
+
 This module simplifyed using of volley
 
 ## Features
@@ -7,46 +9,60 @@ This module simplifyed using of volley
 - Multipart requests
 
 ## Usage
+Step 1. Add it in your root build.gradle at the end of repositories:
+	allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+
+
+Step 2. Add the dependency
+	dependencies {
+	        compile 'com.github.molaeiali:easytousevolley:1.0.0-beta2'
+	}
+
 You need to create a singleton class named **EasyVolley** that extends **EasyVolleyManager**,  it has to Override **defaultHeaders** and **getLoading** method, if you have a loading view for connections, it should implement**EasyVolleyLoading** that has two functions, **start** and **stop**, and you should return a new instance of it on getLoading, and if you have a default header that should used on all connections, create it here.
 
-		package org.molaei.easytousevolley.api;
+	package org.molaei.easytousevolley.api;
 
 
-		import android.app.Activity;
-		import android.content.Context;
+	import android.app.Activity;
+	import android.content.Context;
 
-		import org.molaei.easyvolley.EasyVolleyLoading;
-		import org.molaei.easyvolley.EasyVolleyManager;
+	import org.molaei.easyvolley.EasyVolleyLoading;
+	import org.molaei.easyvolley.EasyVolleyManager;
 
-		import java.util.HashMap;
+	import java.util.HashMap;
 
-		public class EasyVolley extends EasyVolleyManager {
-		    private static EasyVolley instance;
+	public class EasyVolley extends EasyVolleyManager {
+	    private static EasyVolley instance;
 
-		    public static EasyVolley getInstance(Activity activity) {
-			if(instance == null){
-			    instance = new EasyVolley(activity);
-			}
-			return instance;
-		    }
-
-		    private EasyVolley(Activity activity){
-				super(activity);
-		    }
-
-
- 		   @Override
-  		  protected HashMap<String, String> defaultHeaders() {
-    			//I didn't have any
-     		   return null;
-    		}
-
-  		  @Override
-  		  protected EasyVolleyLoading getLoading(Context context) {
-			//I didn't have any
-  		      return null;
-  		  }
+	    public static EasyVolley getInstance(Activity activity) {
+		if(instance == null){
+		    instance = new EasyVolley(activity);
 		}
+		return instance;
+	    }
+
+	    private EasyVolley(Activity activity){
+			super(activity);
+	    }
+
+
+	   @Override
+	  protected HashMap<String, String> defaultHeaders() {
+		//I didn't have any
+	   return null;
+	}
+
+	  @Override
+	  protected EasyVolleyLoading getLoading(Context context) {
+		//I didn't have any
+	      return null;
+	  }
+	}
 
 ## Sending Requests
 ### GET:
