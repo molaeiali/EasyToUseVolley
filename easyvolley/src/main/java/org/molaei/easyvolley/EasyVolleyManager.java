@@ -25,6 +25,10 @@ import java.util.Map;
 
 public abstract class EasyVolleyManager {
     private RequestQueue queue;
+    private final String twoHyphens = "--";
+    private final String lineEnd = "\r\n";
+    private final String boundary = "apiclient-" + System.currentTimeMillis();
+    private final String mimeType = "multipart/form-data;boundary=" + boundary;
 
     protected EasyVolleyManager(Context context) {
         if (queue == null) {
@@ -36,18 +40,18 @@ public abstract class EasyVolleyManager {
 
     protected abstract EasyVolleyLoading getLoading(Context context);
 
-    public void GET(final String tag, final Context context, String url, final EasyVolleyWorks easyVolleyWorks, final boolean hasLogin) {
-        GET(tag, context, url, easyVolleyWorks, hasLogin, defaultHeaders());
+    public void GET(final String tag, final Context context, String url, final EasyVolleyWorks easyVolleyWorks, final boolean hasLoading) {
+        GET(tag, context, url, easyVolleyWorks, hasLoading, defaultHeaders());
     }
 
     @SuppressWarnings("WeakerAccess")
-    public void GET(final String tag, final Context context, String url, final EasyVolleyWorks easyVolleyWorks, final boolean hasLogin, final HashMap<String, String> headers) {
+    public void GET(final String tag, final Context context, String url, final EasyVolleyWorks easyVolleyWorks, final boolean hasLoading, final HashMap<String, String> headers) {
         final EasyVolleyLoading loadingInterface = getLoading(context);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        if (hasLogin && loadingInterface != null) {
+                        if (hasLoading && loadingInterface != null) {
                             loadingInterface.stop();
                         }
                         Log.i("EasyVolleyPostExecGET", tag);
@@ -56,7 +60,7 @@ public abstract class EasyVolleyManager {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                if (hasLogin && loadingInterface != null) {
+                if (hasLoading && loadingInterface != null) {
                     loadingInterface.stop();
                 }
                 Log.i("EasyVolleyFailedGET", tag);
@@ -70,24 +74,24 @@ public abstract class EasyVolleyManager {
         };
         Log.i("EasyVolleyPreExecGET", tag);
         easyVolleyWorks.preExecute(tag);
-        if (hasLogin && loadingInterface != null) {
+        if (hasLoading && loadingInterface != null) {
             loadingInterface.start();
         }
         queue.add(stringRequest);
     }
 
-    public void POST(final String tag, final Context context, String url, final HashMap<String, String> parameters, final EasyVolleyWorks easyVolleyWorks, final boolean hasLogin) {
-        POST(tag, context, url, parameters, easyVolleyWorks, hasLogin, defaultHeaders());
+    public void POST(final String tag, final Context context, String url, final HashMap<String, String> parameters, final EasyVolleyWorks easyVolleyWorks, final boolean hasLoading) {
+        POST(tag, context, url, parameters, easyVolleyWorks, hasLoading, defaultHeaders());
     }
 
     @SuppressWarnings("WeakerAccess")
-    public void POST(final String tag, final Context context, String url, final HashMap<String, String> parameters, final EasyVolleyWorks easyVolleyWorks, final boolean hasLogin, final HashMap<String, String> headers) {
+    public void POST(final String tag, final Context context, String url, final HashMap<String, String> parameters, final EasyVolleyWorks easyVolleyWorks, final boolean hasLoading, final HashMap<String, String> headers) {
         final EasyVolleyLoading loadingInterface = getLoading(context);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        if (hasLogin && loadingInterface != null) {
+                        if (hasLoading && loadingInterface != null) {
                             loadingInterface.stop();
                         }
                         Log.i("EasyVolleyPostExecPOST", tag);
@@ -96,7 +100,7 @@ public abstract class EasyVolleyManager {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                if (hasLogin && loadingInterface != null) {
+                if (hasLoading && loadingInterface != null) {
                     loadingInterface.stop();
                 }
                 Log.i("EasyVolleyFailedPOST", tag);
@@ -119,23 +123,19 @@ public abstract class EasyVolleyManager {
         };
         Log.i("EasyVolleyPreExecPOST", tag);
         easyVolleyWorks.preExecute(tag);
-        if (hasLogin && loadingInterface != null) {
+        if (hasLoading && loadingInterface != null) {
             loadingInterface.start();
         }
         queue.add(stringRequest);
     }
 
-    private final String twoHyphens = "--";
-    private final String lineEnd = "\r\n";
-    private final String boundary = "apiclient-" + System.currentTimeMillis();
-    private final String mimeType = "multipart/form-data;boundary=" + boundary;
 
-    public void MultiPart(final String tag, final Context context, String url, final HashMap<String, String> parameters, final HashMap<String, File> files, final EasyVolleyWorks easyVolleyWorks, final boolean hasLogin) {
-        MultiPart(tag, context, url, parameters, files, easyVolleyWorks, hasLogin, defaultHeaders());
+    public void MultiPart(final String tag, final Context context, String url, final HashMap<String, String> parameters, final HashMap<String, File> files, final EasyVolleyWorks easyVolleyWorks, final boolean hasLoading) {
+        MultiPart(tag, context, url, parameters, files, easyVolleyWorks, hasLoading, defaultHeaders());
     }
 
     @SuppressWarnings("WeakerAccess")
-    public void MultiPart(final String tag, final Context context, String url, final HashMap<String, String> parameters, final HashMap<String, File> files, final EasyVolleyWorks easyVolleyWorks, final boolean hasLogin, final HashMap<String, String> headers) {
+    public void MultiPart(final String tag, final Context context, String url, final HashMap<String, String> parameters, final HashMap<String, File> files, final EasyVolleyWorks easyVolleyWorks, final boolean hasLoading, final HashMap<String, String> headers) {
         final EasyVolleyLoading loadingInterface = getLoading(context);
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         DataOutputStream dos = new DataOutputStream(bos);
@@ -174,7 +174,7 @@ public abstract class EasyVolleyManager {
             EasyVolleyMultipartRequest multipartRequest = new EasyVolleyMultipartRequest(url, mimeType, multipartBody, new Response.Listener<NetworkResponse>() {
                 @Override
                 public void onResponse(NetworkResponse response) {
-                    if (hasLogin && loadingInterface != null) {
+                    if (hasLoading && loadingInterface != null) {
                         loadingInterface.stop();
                     }
                     Log.i("EasyVolleyPostExecMULTI", tag);
@@ -183,7 +183,7 @@ public abstract class EasyVolleyManager {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    if (hasLogin && loadingInterface != null) {
+                    if (hasLoading && loadingInterface != null) {
                         loadingInterface.stop();
                     }
                     Log.i("EasyVolleyFailedMULTI", tag);
@@ -197,7 +197,7 @@ public abstract class EasyVolleyManager {
             };
             Log.i("EasyVolleyPreExecMULTI", tag);
             easyVolleyWorks.preExecute(tag);
-            if (hasLogin && loadingInterface != null) {
+            if (hasLoading && loadingInterface != null) {
                 loadingInterface.start();
             }
             queue.add(multipartRequest);
@@ -206,7 +206,6 @@ public abstract class EasyVolleyManager {
             e.printStackTrace();
         }
     }
-
 
     private void buildStringPart(DataOutputStream dataOutputStream, byte[] fileData, String partName) throws IOException {
         dataOutputStream.writeBytes(twoHyphens + boundary + lineEnd);
