@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -69,11 +70,11 @@ public abstract class EasyVolleyManager {
         }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> defaultHeaders = new HashMap<>();
-                if(headers != null){
+                HashMap<String, String> defaultHeaders = new HashMap<>();
+                if (headers != null) {
                     defaultHeaders.putAll(headers);
                 }
-                if(defaultHeaders() != null){
+                if (defaultHeaders() != null) {
                     defaultHeaders.putAll(defaultHeaders());
                 }
                 return defaultHeaders;
@@ -125,11 +126,11 @@ public abstract class EasyVolleyManager {
 
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> defaultHeaders = new HashMap<>();
-                if(headers != null){
+                HashMap<String, String> defaultHeaders = new HashMap<>();
+                if (headers != null) {
                     defaultHeaders.putAll(headers);
                 }
-                if(defaultHeaders() != null){
+                if (defaultHeaders() != null) {
                     defaultHeaders.putAll(defaultHeaders());
                 }
                 return defaultHeaders;
@@ -206,11 +207,11 @@ public abstract class EasyVolleyManager {
             }) {
                 @Override
                 public Map<String, String> getHeaders() throws AuthFailureError {
-                    HashMap<String,String> defaultHeaders = new HashMap<>();
-                    if(headers != null){
+                    HashMap<String, String> defaultHeaders = new HashMap<>();
+                    if (headers != null) {
                         defaultHeaders.putAll(headers);
                     }
-                    if(defaultHeaders() != null){
+                    if (defaultHeaders() != null) {
                         defaultHeaders.putAll(defaultHeaders());
                     }
                     return defaultHeaders;
@@ -220,6 +221,17 @@ public abstract class EasyVolleyManager {
             easyVolleyWorks.preExecute(tag);
             if (hasLoading && loadingInterface != null) {
                 loadingInterface.start();
+            }
+            if (files != null) {
+                int filesSizeInBytes = 0;
+                for (Map.Entry<String, File> file : files.entrySet()) {
+                    filesSizeInBytes += file.getValue().length();
+                }
+                multipartRequest.setRetryPolicy(new DefaultRetryPolicy(
+                        filesSizeInBytes / 100,
+                        DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                        DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
+                );
             }
             queue.add(multipartRequest);
 
