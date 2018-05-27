@@ -146,11 +146,15 @@ public abstract class EasyVolleyManager {
 
 
     public void MultiPart(final String tag, final Context context, String url, final HashMap<String, String> parameters, final HashMap<String, File> files, final EasyVolleyWorks easyVolleyWorks, final boolean hasLoading) {
-        MultiPart(tag, context, url, parameters, files, easyVolleyWorks, hasLoading, null);
+        MultiPart(tag, context, url, parameters, files, easyVolleyWorks, hasLoading, null, DefaultRetryPolicy.DEFAULT_MAX_RETRIES);
+    }
+
+    public void MultiPart(final String tag, final Context context, String url, final HashMap<String, String> parameters, final HashMap<String, File> files, final EasyVolleyWorks easyVolleyWorks, final boolean hasLoading, int maxRetries) {
+        MultiPart(tag, context, url, parameters, files, easyVolleyWorks, hasLoading, null, maxRetries);
     }
 
     @SuppressWarnings("WeakerAccess")
-    public void MultiPart(final String tag, final Context context, String url, final HashMap<String, String> parameters, final HashMap<String, File> files, final EasyVolleyWorks easyVolleyWorks, final boolean hasLoading, final HashMap<String, String> headers) {
+    public void MultiPart(final String tag, final Context context, String url, final HashMap<String, String> parameters, final HashMap<String, File> files, final EasyVolleyWorks easyVolleyWorks, final boolean hasLoading, final HashMap<String, String> headers, int maxRetries) {
         final EasyVolleyLoading loadingInterface = getLoading(context);
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         DataOutputStream dos = new DataOutputStream(bos);
@@ -229,7 +233,7 @@ public abstract class EasyVolleyManager {
                 }
                 multipartRequest.setRetryPolicy(new DefaultRetryPolicy(
                         filesSizeInBytes / 100,
-                        DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                        maxRetries,
                         DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
                 );
             }
